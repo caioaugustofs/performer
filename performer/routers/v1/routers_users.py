@@ -4,8 +4,11 @@ from fastapi import APIRouter
 
 from performer.schemas.schemas_users import (
     UserCreateSchema,
+    UserEmailUpdate,
     UserList,
+    UserPassworrdUpdate,
     UserPublicSchema,
+    UserUsernameUpdate,
 )
 
 router = APIRouter(prefix='/users', tags=['Users'])
@@ -34,15 +37,17 @@ def get_user(user_id: int):
 
 
 @router.patch('/password/user_id}', status_code=HTTPStatus.OK)
-def update_password(user_id: int, user: UserCreateSchema):
+def update_password(user_id: int, user: UserPassworrdUpdate):
     return True
+
 
 @router.patch('/email/user_id}', status_code=HTTPStatus.OK)
-def update_email(user_id: int, user: UserCreateSchema):
+def update_email(user_id: int, user: UserEmailUpdate):
     return True
 
+
 @router.patch('/username/user_id}', status_code=HTTPStatus.OK)
-def update_username(user_id: int, user: UserCreateSchema):
+def update_username(user_id: int, user: UserUsernameUpdate):
     return True
 
 

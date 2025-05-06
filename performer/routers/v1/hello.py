@@ -8,8 +8,8 @@ router = APIRouter(tags=['Hello'])
 @router.get('/')
 def hello():
     return {
-        'message': 'Ola, bem-vindo ao Performer!'
-        ' Para acessar a API, use /docs ou /redoc'
+        'message': 'Ola, bem-vindo ao Performer! '
+        'Para acessar a documentação da API, use /docs ou /redoc'
     }
 
 

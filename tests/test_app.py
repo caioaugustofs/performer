@@ -12,8 +12,8 @@ def test_hello():
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'message': 'Ola, bem-vindo ao Performer!'
-        ' Para acessar a API, use /docs ou /redoc'
+        'message': 'Ola, bem-vindo ao Performer! '
+        'Para acessar a documentação da API, use /docs ou /redoc'
     }
 
 
