@@ -8,7 +8,7 @@ from performer.schemas.schemas_users import (
     UserPublicSchema,
 )
 
-router = APIRouter(prefix='/users', tags=['users'])
+router = APIRouter(prefix='/users', tags=['Users'])
 
 
 @router.post(
@@ -26,11 +26,26 @@ def get_users():
     return {'users': []}
 
 
-@router.patch('/users/{user_id}', status_code=HTTPStatus.OK)
-def update_user(user_id: int, user: UserCreateSchema):
+@router.get(
+    '/{user_id}', status_code=HTTPStatus.OK, response_model=UserPublicSchema
+)
+def get_user(user_id: int):
+    return {'user_id': user_id}
+
+
+@router.patch('/password/user_id}', status_code=HTTPStatus.OK)
+def update_password(user_id: int, user: UserCreateSchema):
+    return True
+
+@router.patch('/email/user_id}', status_code=HTTPStatus.OK)
+def update_email(user_id: int, user: UserCreateSchema):
+    return True
+
+@router.patch('/username/user_id}', status_code=HTTPStatus.OK)
+def update_username(user_id: int, user: UserCreateSchema):
     return True
 
 
-@router.delete('/users/{user_id}', status_code=HTTPStatus.NO_CONTENT)
+@router.delete('/{user_id}', status_code=HTTPStatus.NO_CONTENT)
 def delete_user(user_id: int):
     return None

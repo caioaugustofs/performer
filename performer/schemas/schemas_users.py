@@ -13,8 +13,16 @@ class UserPublicSchema(BaseModel):
     email: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
+class UserEmailUpdate(BaseModel):
+    email: str
+
+class UserUsernameUpdate(BaseModel):
+    username: str
+
+class UserPassworrdUpdate(BaseModel):
+    password: str
 
 class UserList(BaseModel):
     users: list[UserPublicSchema]
