@@ -56,7 +56,7 @@ addopts = '-p no:warnings'
 [tool.taskipy.tasks]
 lint = 'ruff check'
 pre_format = 'ruff check --fix'
-format = 'ruff format'
+format = 'isort . &&blue . &&ruff format'
 pre_test = 'task lint'
 test = 'clear &pytest -s -x --cov=performer -vv'
 post_test = 'coverage html'

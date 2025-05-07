@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from performer.database import get_session
 from performer.models import User
 from performer.schemas.schemas_users import (
+    ResponseRole,
+    ResponseSubscriptionStatus,
     UserCreateSchema,
     UserList,
     UserPasswordUpdate,
@@ -127,3 +129,59 @@ def delete_user(user_id: int, session: Session_):
 
     session.delete(db_user)
     session.commit()
+
+
+@router.patch(
+    '/role/{user_id}/{role}',
+    response_model=ResponseRole,
+    status_code=HTTPStatus.OK,
+)
+def user_update_role(user_id: int, role: str, session: Session_):
+    db_user = session.scalar(select(User).where(User.id == user_id))
+
+    if not db_user:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
+        )
+
+    if db_user.role == role:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='Vocẽ já possui esse papel',
+        )
+
+    db_user.role = role
+    session.commit()
+    session.refresh(db_user)
+    return db_user
+
+
+@router.patch(
+    '/subscription_status/{user_id}',
+    response_model=ResponseSubscriptionStatus,
+    status_code=HTTPStatus.OK,
+)
+def user_update_Subscription_Status(
+    user_id: int, user_info: ResponseSubscriptionStatus, session: Session_
+):
+    db_user = session.scalar(
+        select(User).where(
+            or_(User.id == user_id, User.email == user_info.email)
+        )
+    )
+
+    if not db_user:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
+        )
+
+    if db_user.subscription_status == user_info.subscription_status:
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT,
+            detail='Vocẽ já possui esse status',
+        )
+
+    db_user.subscription_status = user_info.subscription_status
+    session.commit()
+    session.refresh(db_user)
+    return db_user

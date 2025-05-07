@@ -53,3 +53,28 @@ def test_delete_user(client, user):
     response = client.delete(f'/users/{user.id}')
 
     assert response.status_code == HTTPStatus.NO_CONTENT
+
+
+def test_update_role(client, user):
+    response = client.patch(f'/users/role/{user.id}/treinador')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'role': user.role}
+
+
+def test_update_subscription_status(client, user):
+    response = client.patch(
+        f'/users/subscription_status/{user.id}',
+        json={
+            'id': user.id,
+            'email': user.email,
+            'subscription_status': 'premium',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'id': user.id,
+        'email': user.email,
+        'subscription_status': 'premium',
+    }

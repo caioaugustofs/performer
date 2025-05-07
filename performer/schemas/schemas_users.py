@@ -28,3 +28,13 @@ class UserPasswordUpdate(BaseModel):
 
 class UserList(BaseModel):
     users: list[UserPublicSchema]
+
+
+class ResponseRole(BaseModel):
+    role: str
+
+
+class ResponseSubscriptionStatus(BaseModel):
+    id: int
+    email: str
+    subscription_status: str
