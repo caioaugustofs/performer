@@ -16,16 +16,14 @@ class UserPublicSchema(BaseModel):
         from_attributes = True
 
 
-class UserEmailUpdate(BaseModel):
-    email: str
-
-
 class UserUsernameUpdate(BaseModel):
-    username: str
+    new_username: str
 
 
-class UserPassworrdUpdate(BaseModel):
+class UserPasswordUpdate(BaseModel):
+    email: str
     password: str
+    new_password: str
 
 
 class UserList(BaseModel):

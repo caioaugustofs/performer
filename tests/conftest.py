@@ -1,16 +1,15 @@
+from contextlib import contextmanager
+from datetime import datetime
+
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
 
 from performer.app import app
 from performer.database import get_session
 from performer.models import User, table_registry
-from contextlib import contextmanager
-from datetime import datetime
-from sqlalchemy import create_engine, event
-
-from sqlalchemy.pool import StaticPool
 
 
 @pytest.fixture

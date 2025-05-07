@@ -7,6 +7,6 @@ logger.setLevel(logging.INFO)
 
 @asynccontextmanager
 async def lifespan(app):
-    logger.info("Iniciando api Performer")
+    logger.info('Iniciando api Performer')
     yield
-    logger.info("Finalizando api Performer")
+    logger.info('Finalizando api Performer')
