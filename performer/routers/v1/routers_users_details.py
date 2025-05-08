@@ -10,6 +10,8 @@ from performer.model.models import User_details
 from performer.schemas.schemas_users_details import (
     DetailsList,
     UserDetailsFull,
+    UserDetailsPublic,
+    UserDetailsUpdate,
 )
 
 Session_ = Annotated[Session, Depends(get_session)]
@@ -41,6 +43,21 @@ def get_info_user_by_id(user_id: int, session: Session_):
     return db_details
 
 
-@router.put('/')
-def add_info_user(session: Session_):
-    return True
+@router.patch('/', response_model=UserDetailsPublic, status_code=HTTPStatus.OK)
+def update_info_user(user_info: UserDetailsUpdate, session: Session_):
+    db_details = session.scalar(
+        select(User_details).where(User_details.user_id == user_info.user_id)
+    )
+
+    if not db_details:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Informações não encontrado',
+        )
+
+    for key, value in user_info.dict().items():
+        setattr(db_details, key, value)
+
+    session.commit()
+    session.refresh(db_details)
+    return db_details
