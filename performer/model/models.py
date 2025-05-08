@@ -33,8 +33,8 @@ class User:
 class User_details:
     __tablename__ = 'user_details'
 
-    id: Mapped[int] = mapped_column(init=False, primary_key=True)
-    user_id: Mapped[int] = mapped_column(init=False)
+    id: Mapped[int] = mapped_column(init=False, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(nullable=False, index=True)
     data_de_nascimento: Mapped[str] = mapped_column(
         default=None, nullable=True
     )

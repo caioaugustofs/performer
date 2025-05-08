@@ -6,7 +6,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from performer.database import get_session
-from performer.models import User
+from performer.model.models import User
 from performer.schemas.schemas_users import (
     ResponseRole,
     ResponseSubscriptionStatus,

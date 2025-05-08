@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from performer.models import table_registry
+from performer.model.models import table_registry
 from performer.settings import Settings
 
 # this is the Alembic Config object, which provides

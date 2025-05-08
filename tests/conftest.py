@@ -9,7 +9,7 @@ from sqlalchemy.pool import StaticPool
 
 from performer.app import app
 from performer.database import get_session
-from performer.models import User, table_registry
+from performer.model.models import User, User_details, table_registry
 
 
 @pytest.fixture
@@ -65,3 +65,13 @@ def user(session):
     session.refresh(user)
 
     return user
+
+
+@pytest.fixture
+def user_details(session, user):
+    details = User_details(user_id=user.id, data_de_nascimento='01/01/2000')
+
+    session.add(details)
+    session.commit()
+    session.refresh(details)
+    return details
