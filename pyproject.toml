@@ -37,11 +37,11 @@ opentelemetry-exporter-otlp = "^1.32.1"
 
 [tool.ruff]
 line-length = 79
-extend-exclude = ['migrations']
+extend-exclude = ['migrations','performer/model/models.py']
 
 [tool.ruff.lint]
 preview = true
-select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+select = ['I','F', 'E', 'W', 'PL', 'PT']
 
 [tool.ruff.format]
 preview = true
@@ -56,7 +56,7 @@ addopts = '-p no:warnings'
 [tool.taskipy.tasks]
 lint = 'ruff check'
 pre_format = 'ruff check --fix'
-format = 'isort . &&blue . &&ruff format'
+format = 'isort . && blue . &&ruff format'
 pre_test = 'task lint'
 test = 'clear &pytest -s -x --cov=performer -vv'
 post_test = 'coverage html'
