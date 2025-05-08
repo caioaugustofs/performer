@@ -19,7 +19,7 @@ def test_update_info_user(client, user_details):
         'id': user_details.id,
         'user_id': user_details.user_id,
         'altura': 1.75,
-        'data_de_nascimento': '2000-01-01',  # Adicione campos obrigatórios aqui
+        'data_de_nascimento': '2000-01-01',
     }
 
     response = client.patch('/detail/', json=update_data)
