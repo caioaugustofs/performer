@@ -27,13 +27,17 @@ def test_update_info_user(client, user_details):
     assert response.status_code == HTTPStatus.OK
 
 
-def test_update_user_is_activo(client, user_details):
+def test_update_info_user_picture(client, user_details):
     update_data = {
-        'id': user_details.id,
         'user_id': user_details.user_id,
-        'is_active': False,
+        'profile_picture_url': 'https://example.com/new_picture.jpg',
     }
 
-    response = client.patch('/detail/', json=update_data)
+    response = client.patch('/detail/picture', json=update_data)
 
     assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'id': user_details.id,
+        'user_id': user_details.user_id,
+        'profile_picture_url': update_data['profile_picture_url'],
+    }

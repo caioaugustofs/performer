@@ -7,8 +7,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from performer.database import get_session
 from performer.model.models import User_details
-from performer.schemas.schemas_users_details import (
+from performer.schemas.users.schemas_users_details import (
     DetailsList,
+    UseDetailsPicture,
+    UseDetailsPictureResponse,
     UserDetailsFull,
     UserDetailsPublic,
     UserDetailsUpdate,
@@ -65,5 +67,30 @@ async def update_info_user(user_info: UserDetailsUpdate, session: Session):
         setattr(db_details, key, value)
 
     session.commit()
+    await session.refresh(db_details)
+    return db_details
+
+
+@router.patch(
+    '/picture',
+    response_model=UseDetailsPictureResponse,
+    status_code=HTTPStatus.OK,
+)
+async def update_info_user_picture(
+    user_info: UseDetailsPicture, session: Session
+):
+    db_details = await session.scalar(
+        select(User_details).where(User_details.user_id == user_info.user_id)
+    )
+
+    if not db_details:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Informações não encontrado',
+        )
+
+    db_details.profile_picture_url = user_info.profile_picture_url
+
+    await session.commit()
     await session.refresh(db_details)
     return db_details

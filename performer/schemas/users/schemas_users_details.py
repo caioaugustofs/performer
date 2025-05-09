@@ -22,8 +22,21 @@ class UserDetailsUpdate(BaseModel):
     sexo: str | None = None
     objetivo: str | None = None
     fitness_level: str | None = None
+    preferred_units: str | None = 'metric'
     equipment_available: list | None = None
+    injuries: list | None = None
 
 
 class UserDetailsFull(UserDetailsUpdate):
     id: int
+
+
+class UseDetailsPicture(BaseModel):
+    user_id: int
+    profile_picture_url: str
+
+
+class UseDetailsPictureResponse(BaseModel):
+    id: int
+    user_id: int
+    profile_picture_url: str

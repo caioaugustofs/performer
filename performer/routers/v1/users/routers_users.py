@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from performer.database import get_session
 from performer.model.models import User
-from performer.schemas.schemas_users import (
+from performer.schemas.users.schemas_users import (
     ResponseRole,
     ResponseSubscriptionStatus,
     UserCreateSchema,
