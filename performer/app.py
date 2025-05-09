@@ -6,8 +6,9 @@ from performer.routers.v1.users import (
     routers_users,
     routers_users_details,
 )
+from performer.tools.tool_logs import lifespan
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 
 app.include_router(hello.router)

@@ -42,7 +42,6 @@ async def create_user(user: UserCreateSchema, session: Session):
     session.add(db_user)
     await session.commit()
     await session.refresh(db_user)
-
     return db_user
 
 
