@@ -19,7 +19,9 @@ from performer.schemas.users.schemas_users_details import (
 Session = Annotated[AsyncSession, Depends(get_session)]
 
 
-router = APIRouter(prefix='/detail', tags=['detail'])
+router = APIRouter(prefix='/detail', tags=['Detail'])
+
+# ------------------------- GET -------------------------#
 
 
 @router.get('/', response_model=DetailsList, status_code=HTTPStatus.OK)
@@ -49,6 +51,9 @@ async def get_info_user_by_id(user_id: int, session: Session):
             detail='Informações não encontrado',
         )
     return db_details
+
+
+# ------------------------- PATCH -------------------------#
 
 
 @router.patch('/', response_model=UserDetailsPublic, status_code=HTTPStatus.OK)

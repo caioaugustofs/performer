@@ -12,6 +12,8 @@ router = APIRouter(prefix='/Workout_Sessions', tags=['Workout Sessions'])
 
 Session = Annotated[AsyncSession, Depends(get_session)]
 
+# ------------------------- GET -------------------------#
+
 
 @router.get('/', status_code=HTTPStatus.OK)
 async def get_user_workout_sessions(session: Session):

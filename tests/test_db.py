@@ -72,12 +72,12 @@ async def test_delete_user(session, mock_db_time):
         await session.commit()
 
     # Exclusão do usuário
-    user = await session.scalar(select(
-        User).where(User.username == 'charlie'))
+    user = await session.scalar(select(User).where(User.username == 'charlie'))
     await session.delete(user)
     await session.commit()
 
     # Verificação da exclusão
     deleted_user = await session.scalar(
-        select(User).where(User.username == 'charlie'))
+        select(User).where(User.username == 'charlie')
+    )
     assert deleted_user is None

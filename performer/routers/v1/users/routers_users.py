@@ -21,6 +21,8 @@ router = APIRouter(prefix='/users', tags=['Users'])
 
 Session = Annotated[AsyncSession, Depends(get_session)]
 
+# ------------------------- POST -------------------------#
+
 
 @router.post(
     '/', status_code=HTTPStatus.CREATED, response_model=UserPublicSchema
@@ -45,6 +47,9 @@ async def create_user(user: UserCreateSchema, session: Session):
     return db_user
 
 
+# ------------------------- GET -------------------------#
+
+
 @router.get('/', status_code=HTTPStatus.OK, response_model=UserList)
 async def get_users(session: Session, skip: int = 0, limit: int = 100):
     users = await session.scalars(select(User).offset(skip).limit(limit))
@@ -53,7 +58,9 @@ async def get_users(session: Session, skip: int = 0, limit: int = 100):
 
 
 @router.get(
-    '/{user_id}', response_model=UserPublicSchema, status_code=HTTPStatus.OK
+    '/{user_id}',
+    response_model=UserPublicSchema,
+    status_code=HTTPStatus.OK,
 )
 async def get_user_by_id(user_id: int, session: Session):
     db_user = await session.scalar(select(User).where(User.id == user_id))
@@ -64,6 +71,9 @@ async def get_user_by_id(user_id: int, session: Session):
         )
 
     return db_user
+
+
+# ------------------------- PATCH -------------------------#
 
 
 @router.patch(
@@ -122,19 +132,6 @@ async def update_username(
     return db_user
 
 
-@router.delete('/{user_id}', status_code=HTTPStatus.NO_CONTENT)
-async def delete_user(user_id: int, session: Session):
-    db_user = await session.scalar(select(User).where(User.id == user_id))
-
-    if not db_user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
-        )
-
-    await session.delete(db_user)
-    await session.commit()
-
-
 @router.patch(
     '/role/{user_id}/{role}',
     response_model=ResponseRole,
@@ -189,3 +186,19 @@ async def user_update_Subscription_Status(
     await session.commit()
     await session.refresh(db_user)
     return db_user
+
+
+# ------------------------- DELETE -------------------------#
+
+
+@router.delete('/{user_id}', status_code=HTTPStatus.NO_CONTENT)
+async def delete_user(user_id: int, session: Session):
+    db_user = await session.scalar(select(User).where(User.id == user_id))
+
+    if not db_user:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
+        )
+
+    await session.delete(db_user)
+    await session.commit()
