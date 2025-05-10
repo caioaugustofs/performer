@@ -1,33 +1,33 @@
 from fastapi import FastAPI
 
-from performer.routers.v1.users import (
-    hello,
-    routers_user_workout_sessions,
-    routers_users,
-    routers_users_details,
-    routers_progress_tracking,
-    routers_user_workout_schedules,
-    routers_user_exercise_logs,
-)
-from performer.routers.v1.workout import (
-    routers_workout,
-    routers_exercises,
-    routers_workout_exercises,
-    routers_equipment,
-    routers_user_hiit_logs,
-    routers_cardio_exercises,
-    routers_user_cardio_logs,
-)
 from performer.routers.v1.nutrition import (
     routers_food_items,
     routers_user_meal_logs,
 )
 from performer.routers.v1.social import (
     routers_achievements,
-    routers_user_achievements,
-    routers_social_posts,
     routers_social_comments,
     routers_social_likes,
+    routers_social_posts,
+    routers_user_achievements,
+)
+from performer.routers.v1.users import (
+    hello,
+    routers_progress_tracking,
+    routers_user_exercise_logs,
+    routers_user_workout_schedules,
+    routers_user_workout_sessions,
+    routers_users,
+    routers_users_details,
+)
+from performer.routers.v1.workout import (
+    routers_cardio_exercises,
+    routers_equipment,
+    routers_exercises,
+    routers_user_cardio_logs,
+    routers_user_hiit_logs,
+    routers_workout,
+    routers_workout_exercises,
 )
 from performer.tools.tool_logs import lifespan
 
@@ -59,4 +59,3 @@ app.include_router(routers_social_likes.router)
 # ------------------- Nutrition -------------------
 app.include_router(routers_food_items.router)
 app.include_router(routers_user_meal_logs.router)
-

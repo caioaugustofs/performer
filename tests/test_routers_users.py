@@ -84,7 +84,7 @@ def test_update_role(client, user):
 
 
 def test_delete_user(client, user):
-    response = client.delete(f'/users/{user.id}')
+    response = client.delete(f'/users/delete/{user.id}')
 
     assert response.status_code == HTTPStatus.NO_CONTENT
 
@@ -118,7 +118,7 @@ def test_update_nonexistent_user(client):
 
 
 def test_delete_nonexistent_user(client):
-    response = client.delete('/users/9999')  # ID inexistente
+    response = client.delete('/users/delete/9999')  # ID inexistente
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'Usuário não encontrado'}
@@ -143,3 +143,12 @@ def test_update_subscription_status_nonexistent_user(client):
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'Usuário não encontrado'}
+
+
+def test_get_users_by_email_verified_pagination(client, session, user, user_factory):
+    user_factory.create_batch(10, email_verified=True)
+    response = client.get('/users/email_verified/true?skip=5&limit=3')
+
+    assert response.status_code == HTTPStatus.OK
+
+

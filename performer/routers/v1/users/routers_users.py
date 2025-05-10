@@ -15,6 +15,7 @@ from performer.schemas.users.schemas_users import (
     UserPasswordUpdate,
     UserPublicSchema,
     UserUsernameUpdate,
+    returnSubscriptionList,
 )
 from performer.tools.tool_logs import logger
 
@@ -31,7 +32,7 @@ Session = Annotated[AsyncSession, Depends(get_session)]
 async def create_user(user: UserCreateSchema, session: Session):
     db_user = await session.scalar(
         select(User).where(
-            (User.username == user.username) | (User.email == user.email)
+            or_(User.username == user.username, User.email == user.email)
         )
     )
 
@@ -44,6 +45,7 @@ async def create_user(user: UserCreateSchema, session: Session):
 
     db_user = User(**user.dict())
     session.add(db_user)
+
     await session.commit()
     await session.refresh(db_user)
     logger.info('rota utilizada create_user POST')
@@ -76,6 +78,60 @@ async def get_user_by_id(user_id: int, session: Session):
     return db_user
 
 
+# se o email é verificado ou nao
+@router.get(
+    '/email_verified/{verified}',
+    response_model=UserList,
+    status_code=HTTPStatus.OK,
+)
+async def get_user_by_email_verified(
+    session: Session,
+    email_verified: bool = False,
+    skip: int = 0,
+    limit: int = 100,
+):
+    users = await session.scalars(
+        select(User)
+        .where(User.email_verified == email_verified)
+        .offset(skip)
+        .limit(limit)
+    )
+
+    if not users:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
+        )
+    logger.info('rota utilizada get_user_by_email_verified')
+
+    return {'users': users.all()}
+
+
+@router.get(
+    '/subscription_status/{status}',
+    status_code=HTTPStatus.OK,
+    response_model=returnSubscriptionList,
+)
+async def get_user_by_status(
+    status: str, session: Session, skip: int = 0, limit: int = 100
+):
+    users = await session.scalars(
+        select(User)
+        .where(User.subscription_status == status)
+        .offset(skip)
+        .limit(limit)
+    )
+
+    if not users:
+        logger.warning(f'Usuários com status={status} não encontrados')
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuários não encontrados'
+        )
+
+    numero_user = len(users.all())
+    logger.info('rota utilizada get_user_by_status')
+    return {'total': numero_user, 'subscription_status': users.all()}
+
+
 # ------------------------- PATCH -------------------------#
 
 
@@ -94,10 +150,11 @@ async def update_password(
     if not db_user:
         logger.warning('Usuário não encontrado')
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
+            status_code=HTTPStatus.NOT_FOUND,
+              detail='Usuário não encontrado'
         )
 
-    if db_user.password == user.password:
+    if db_user.password == user.new_password:
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail='Vocẽ já possui essa senha',
@@ -204,7 +261,7 @@ async def user_update_Subscription_Status(
 # ------------------------- DELETE -------------------------#
 
 
-@router.delete('/{user_id}', status_code=HTTPStatus.NO_CONTENT)
+@router.delete('/delete/{user_id}', status_code=HTTPStatus.NO_CONTENT)
 async def delete_user(user_id: int, session: Session):
     db_user = await session.scalar(select(User).where(User.id == user_id))
 

@@ -1,3 +1,4 @@
+import random
 from contextlib import contextmanager
 from datetime import datetime
 
@@ -78,3 +79,24 @@ async def user_details(session, user):
     await session.commit()
     await session.refresh(details)
     return details
+
+
+@pytest.fixture
+def user_factory(session):
+    class UserFactory:
+        @staticmethod
+        def create_batch(count, **kwargs):
+            users = []
+            for _ in range(count):
+                user = User(
+                    username=f'user{random.randint(1, 10000)}',
+                    email=f'user{random.randint(1, 10000)}@test.com',
+                    password='password',
+                    email_verified=kwargs.get('email_verified', False),
+                )
+                session.add(user)
+                users.append(user)
+            session.commit()
+            return users
+
+    return UserFactory()

@@ -35,6 +35,15 @@ class ResponseRole(BaseModel):
 
 
 class ResponseSubscriptionStatus(BaseModel):
-    id: int
     email: str
     subscription_status: str
+
+
+class returnSubscription(BaseModel):
+    id: int
+    subscription_status: str
+
+
+class returnSubscriptionList(BaseModel):
+    total: int
+    subscription_status: list[returnSubscription]

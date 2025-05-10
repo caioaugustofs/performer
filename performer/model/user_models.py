@@ -15,7 +15,7 @@ class User:
     email: Mapped[str] = mapped_column(unique=True)
     email_verified: Mapped[bool] = mapped_column(default=False, nullable=False)
     password_reset_token: Mapped[str] = mapped_column(
-        unique=True, default='', nullable=True
+        default=None, nullable=True
     )
     last_login: Mapped[datetime] = mapped_column(default=None, nullable=True)
     role: Mapped[str] = mapped_column(default='user', nullable=False)

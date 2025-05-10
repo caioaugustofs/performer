@@ -63,8 +63,8 @@ pre_test = 'task lint'
 test = 'clear &pytest -s -x --cov=performer -vv'
 post_test = 'coverage html'
 run = 'fastapi dev performer/app.py --host 0.0.0.0 --port 8001'
-mig ='alembic revision --autogenerate -m "migrations" && alembic upgrade head'
-migtab = 'alembic upgrade head'
+migar = 'alembic revision --autogenerate -m "migrations" && alembic upgrade head'
+migar_tab = 'alembic upgrade head'
 
 
 [tool.poe]
