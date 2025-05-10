@@ -15,6 +15,7 @@ from performer.schemas.users.schemas_users_details import (
     UserDetailsPublic,
     UserDetailsUpdate,
 )
+from performer.tools.tool_logs import logger
 
 Session = Annotated[AsyncSession, Depends(get_session)]
 
@@ -34,7 +35,7 @@ async def get_info_user(session: Session, skip: int = 0, limit: int = 100):
             status_code=HTTPStatus.NOT_FOUND,
             detail='Informações não encontrado',
         )
-
+    logger.info('rota utilizada get_info_user')
     return {'details': db_details}
 
 
@@ -50,6 +51,7 @@ async def get_info_user_by_id(user_id: int, session: Session):
             status_code=HTTPStatus.NOT_FOUND,
             detail='Informações não encontrado',
         )
+    logger.info('rota utilizada get_info_user_by_id')
     return db_details
 
 
@@ -63,6 +65,7 @@ async def update_info_user(user_info: UserDetailsUpdate, session: Session):
     )
 
     if not db_details:
+        logger.warning('Usuário não encontrado')
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Informações não encontrado',
@@ -73,6 +76,7 @@ async def update_info_user(user_info: UserDetailsUpdate, session: Session):
 
     session.commit()
     await session.refresh(db_details)
+    logger.info('rota utilizada update_info_user')
     return db_details
 
 
@@ -89,6 +93,7 @@ async def update_info_user_picture(
     )
 
     if not db_details:
+        logger.warning('Usuário não encontrado')
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
             detail='Informações não encontrado',
@@ -98,4 +103,5 @@ async def update_info_user_picture(
 
     await session.commit()
     await session.refresh(db_details)
+    logger.info(f'rota utilizada user_id:{user_info.user_id}')
     return db_details

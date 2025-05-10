@@ -13,6 +13,7 @@ from performer.schemas.workout.schemas_workout import (
     WorkoutPublicList,
     WorkoutUpdate,
 )
+from performer.tools.tool_logs import logger
 
 router = APIRouter(prefix='/workouts', tags=['Workouts'])
 
@@ -27,7 +28,7 @@ async def get_workouts(session: Session, skip: int = 0, limit: int = 100):
     workouts = await session.scalars(
         select(Workouts).offset(skip).limit(limit)
     )
-
+    logger.info('rota utilizada get_workouts')
     return {'workouts': workouts.all()}
 
 
@@ -43,7 +44,7 @@ async def get_workout_by_id(workout_id: int, session: Session):
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='Workout não encontrado'
         )
-
+    logger.info('rota utilizada get_workout_by_id')
     return db_workout
 
 
@@ -65,7 +66,7 @@ async def get_public_status(public_status: bool, session: Session):
             detail=f'Não foi encontrado nenhuma \
 workout com public={public_status}',
         )
-
+    logger.info('rota utilizada get_public_status')
     return {'workouts': workouts_list}
 
 
@@ -86,7 +87,7 @@ async def get_by_Workouts(user_id: int, session: Session):
             status_code=HTTPStatus.NOT_FOUND,
             detail='Nada encontrado',
         )
-
+    logger.info('rota utilizada get_by_Workouts')
     return {'workouts': workouts_list}
 
 
@@ -115,6 +116,7 @@ async def get_workouts_by_user_and_public_status(
             detail=f'No workouts found with public_status={public_status}\
  for user_id={user_id}',
         )
+    logger.info('rota utilizada get_workouts_by_user_and_public_status')
 
     return {'workouts': workouts_list}
 
@@ -138,6 +140,7 @@ async def create_workout(workout: WorkoutFull, session: Session):
     await session.commit()
     await session.refresh(db_workout)
 
+    logger.info('rota utilizada create_workout')
     return db_workout
 
 
@@ -168,6 +171,7 @@ async def update_workout(
 
     await session.commit()
     await session.refresh(db_workout)
+    logger.info('rota utilizada update_workout')
 
     return db_workout
 

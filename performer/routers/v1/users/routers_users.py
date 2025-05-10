@@ -16,6 +16,7 @@ from performer.schemas.users.schemas_users import (
     UserPublicSchema,
     UserUsernameUpdate,
 )
+from performer.tools.tool_logs import logger
 
 router = APIRouter(prefix='/users', tags=['Users'])
 
@@ -35,6 +36,7 @@ async def create_user(user: UserCreateSchema, session: Session):
     )
 
     if db_user:
+        logger.warning('Usuário já existe')
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail='Username or Email already exists',
@@ -44,6 +46,7 @@ async def create_user(user: UserCreateSchema, session: Session):
     session.add(db_user)
     await session.commit()
     await session.refresh(db_user)
+    logger.info('rota utilizada create_user POST')
     return db_user
 
 
@@ -53,7 +56,7 @@ async def create_user(user: UserCreateSchema, session: Session):
 @router.get('/', status_code=HTTPStatus.OK, response_model=UserList)
 async def get_users(session: Session, skip: int = 0, limit: int = 100):
     users = await session.scalars(select(User).offset(skip).limit(limit))
-
+    logger.info('rota utilizada get_users')
     return {'users': users.all()}
 
 
@@ -69,7 +72,7 @@ async def get_user_by_id(user_id: int, session: Session):
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
-
+    logger.info('rota utilizada get_user_by_id')
     return db_user
 
 
@@ -89,6 +92,7 @@ async def update_password(
     )
 
     if not db_user:
+        logger.warning('Usuário não encontrado')
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
@@ -102,6 +106,7 @@ async def update_password(
     db_user.password = user.new_password
     await session.commit()
     await session.refresh(db_user)
+    logger.info('rota utilizada update_password')
     return db_user
 
 
@@ -116,6 +121,7 @@ async def update_username(
     db_user = await session.scalar(select(User).where(User.id == user_id))
 
     if not db_user:
+        logger.warning('Usuário não encontrado')
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
@@ -129,6 +135,7 @@ async def update_username(
     db_user.username = user.new_username
     await session.commit()
     await session.refresh(db_user)
+    logger.info('rota utilizada update_username')
     return db_user
 
 
@@ -141,11 +148,13 @@ async def user_update_role(user_id: int, role: str, session: Session):
     db_user = await session.scalar(select(User).where(User.id == user_id))
 
     if not db_user:
+        logger.warning('Usuário não encontrado')
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
 
     if db_user.role == role:
+        logger.warning('Usuário já possui esse papel')
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail='Vocẽ já possui esse papel',
@@ -154,6 +163,7 @@ async def user_update_role(user_id: int, role: str, session: Session):
     db_user.role = role
     await session.commit()
     await session.refresh(db_user)
+    logger.info('rota utilizada update_role')
     return db_user
 
 
@@ -172,11 +182,13 @@ async def user_update_Subscription_Status(
     )
 
     if not db_user:
+        logger.warning('Usuário não encontrado')
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
 
     if db_user.subscription_status == user_info.subscription_status:
+        logger.warning('Usuário já possui esse status')
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail='Vocẽ já possui esse status',
@@ -185,6 +197,7 @@ async def user_update_Subscription_Status(
     db_user.subscription_status = user_info.subscription_status
     await session.commit()
     await session.refresh(db_user)
+    logger.info('rota utilizada update_Subscription_Status')
     return db_user
 
 
@@ -202,3 +215,4 @@ async def delete_user(user_id: int, session: Session):
 
     await session.delete(db_user)
     await session.commit()
+    logger.info(f'rota utilizada delete_user DELETE user_id:{user_id}')
