@@ -145,10 +145,10 @@ def test_update_subscription_status_nonexistent_user(client):
     assert response.json() == {'detail': 'Usuário não encontrado'}
 
 
-def test_get_users_by_email_verified_pagination(client, session, user, user_factory):
+def test_get_users_by_email_verified_pagination(
+    client, session, user, user_factory
+):
     user_factory.create_batch(10, email_verified=True)
     response = client.get('/users/email_verified/true?skip=5&limit=3')
 
     assert response.status_code == HTTPStatus.OK
-
-

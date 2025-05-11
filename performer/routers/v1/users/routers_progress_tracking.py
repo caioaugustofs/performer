@@ -12,3 +12,9 @@ async def get_progress_tracking():
     Get all progress tracking data
     """
     return {'message': 'Get all progress tracking data'}
+
+
+# ------------------------- GET -------------------------#
+# ------------------------- POST -------------------------#
+# ------------------------- PATCH -------------------------#
+# ------------------------- DELETE -------------------------#

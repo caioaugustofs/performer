@@ -31,7 +31,54 @@ from performer.routers.v1.workout import (
 )
 from performer.tools.tool_logs import lifespan
 
-app = FastAPI(lifespan=lifespan)
+
+description = """
+A API Performer permite aos usuários melhorar sua jornada fitness. 🚀
+
+## Verificação de Saúde
+
+* **Verificar a saúde do sistema**.
+
+## Usuários
+
+Você pode:
+
+* **Criar usuários**.
+* **Consultar detalhes dos usuários**.
+* **Acompanhar progresso**.
+* **Gerenciar agendas de treino**.
+* **Registrar exercícios**.
+
+## Treino
+
+Você pode:
+
+* **Gerenciar sessões de treino**.
+* **Explorar exercícios**.
+* **Acompanhar registros de cardio e HIIT**.
+* **Gerenciar equipamentos de treino**.
+
+## Social
+
+Você pode:
+
+* **Publicar conquistas**.
+* **Curtir e comentar em publicações**.
+* **Acompanhar conquistas de usuários**.
+
+## Nutrição
+
+Você pode:
+
+* **Registrar refeições**.
+* **Explorar itens alimentares**.
+"""
+
+
+app = FastAPI(lifespan=lifespan,version='0.0.1',
+               summary="Performer API", 
+               description=description,
+               title="Performer API")    
 
 # ------------------- Health Check -------------------
 app.include_router(hello.router)

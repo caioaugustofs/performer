@@ -49,7 +49,7 @@ class Exercises:
 
 
 @table_registry.mapped_as_dataclass
-class workout_exercises:
+class Workout_Exercises:
     __tablename__ = 'workout_exercises'
     id: Mapped[int] = mapped_column(init=False, primary_key=True, index=True)
     workout_id: Mapped[int] = mapped_column(nullable=False, index=True)

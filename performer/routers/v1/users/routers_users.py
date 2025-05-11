@@ -150,8 +150,7 @@ async def update_password(
     if not db_user:
         logger.warning('Usuário não encontrado')
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-              detail='Usuário não encontrado'
+            status_code=HTTPStatus.NOT_FOUND, detail='Usuário não encontrado'
         )
 
     if db_user.password == user.new_password:
