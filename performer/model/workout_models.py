@@ -87,6 +87,9 @@ class Equipment:
     image_url: Mapped[str] = mapped_column(nullable=True)
     description: Mapped[str] = mapped_column(nullable=True)
     tags: Mapped[list] = mapped_column(JSON, nullable=True)
+    muscle_group: Mapped[list] = mapped_column(
+        JSON, default=None, nullable=True
+    )
 
 
 @table_registry.mapped_as_dataclass

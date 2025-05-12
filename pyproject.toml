@@ -13,7 +13,8 @@ dependencies = [
     "pydantic-settings (>=2.9.1,<3.0.0)",
     "psycopg[binary] (>=3.2.7,<4.0.0)",
     "alembic (>=1.15.2,<2.0.0)",
-    "aiosqlite (>=0.21.0,<0.22.0)"
+    "aiosqlite (>=0.21.0,<0.22.0)",
+    "toml (>=0.10.2,<0.11.0)"
 ]
 
 
@@ -63,8 +64,8 @@ pre_test = 'task lint'
 test = 'clear &pytest -s -x --cov=performer -vv'
 post_test = 'coverage html'
 run = 'fastapi dev performer/app.py --host 0.0.0.0 --port 8001'
-migar = 'alembic revision --autogenerate -m "migrations" && alembic upgrade head'
-migar_tab = 'alembic upgrade head'
+migrar = 'alembic revision --autogenerate -m "migrations" && alembic upgrade head'
+migrar_tab = 'alembic upgrade head'
 
 
 [tool.poe]

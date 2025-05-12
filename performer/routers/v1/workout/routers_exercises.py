@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from typing import Annotated
 
+import toml
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,13 +17,22 @@ from performer.schemas.workout.schemas_exercises import (
 )
 from performer.tools.tool_logs import logger
 
+config = toml.load(r'performer/docs/workout/routers_exercises.toml')
+
 router = APIRouter(prefix='/exercises', tags=['Exercises'])
 
 Session = Annotated[AsyncSession, Depends(get_session)]
 
 
 # ------------------------- GET -------------------------#
-@router.get('/', response_model=ExercisePublicList, status_code=HTTPStatus.OK)
+@router.get(
+    '/',
+    response_model=ExercisePublicList,
+    status_code=HTTPStatus.OK,
+    summary=config['get_exercises']['summary'],
+    description=config['get_exercises']['description'],
+    response_description=config['get_exercises']['resp_description'],
+)
 async def get_exercises(
     session: Session,
 ):
@@ -137,6 +147,7 @@ async def update_exercise(
 
     return existing_exercise
 
+
 @router.patch(
     '/{exercise_id}/medias',
     response_model=ExercisePublic,
@@ -145,7 +156,6 @@ async def update_exercise(
 async def update_exercise_midias(
     exercise_id: int, exercise_update: ExerciseUpdateMidia, session: Session
 ):
-
     result = await session.execute(
         select(Exercises).where(Exercises.id == exercise_id)
     )
@@ -168,6 +178,7 @@ async def update_exercise_midias(
 
     return existing_exercise
 
+
 # ------------------------- DELETE -------------------------#
 
 
@@ -186,8 +197,14 @@ async def delete_exercise(
 
     if not existing_exercise:
         logger.warning(f'Exercise with id {exercise_id} not found')
-        return None
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail=f'Exercise with id {exercise_id} not found',
+        )
 
     await session.delete(existing_exercise)
     await session.commit()
-    logger.info(f'Exercise {existing_exercise.name} deleted')
+    logger.info(
+        f'Exercise {existing_exercise.name} deleted',
+        extra={'exercise_id': exercise_id},
+    )

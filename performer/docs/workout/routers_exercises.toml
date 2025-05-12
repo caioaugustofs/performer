@@ -1,0 +1,15 @@
+[get_exercises]
+summary = "Get all exercises"
+description = """
+## Retorna todos os exercícios cadastrados no banco de dados.
+Os exercícios são retornados em ordem dos id, com os seguintes campos:
+- id: ID do exercício
+- name: Nome do exercício
+- difficulty: Dificuldade do exercício
+- muscle_group: Grupo muscular do exercício
+- equipment: Equipamento necessário para o exercício
+- tags: Tags do exercício
+- image_url: URL da imagem do exercício
+- video_url: URL do vídeo do exercício
+"""
+resp_description = "Retorna uma lista com todos os exercícios cadastrados no banco de dados."
