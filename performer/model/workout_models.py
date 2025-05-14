@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import JSON, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import JSON, Column, ForeignKey, Integer, Table, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .models import table_registry
 
@@ -22,6 +22,7 @@ class Workouts:
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()
     )
+    exercises = relationship('Workout_Exercises', back_populates='workout')
 
 
 @table_registry.mapped_as_dataclass
@@ -46,14 +47,28 @@ class Exercises:
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()
     )
+    workout_exercises = relationship(
+        'Workout_Exercises', back_populates='exercise'
+    )
+    equipment = relationship(
+        'Equipment', secondary='exercise_equipment', back_populates='exercises'
+    )
 
 
 @table_registry.mapped_as_dataclass
 class Workout_Exercises:
     __tablename__ = 'workout_exercises'
     id: Mapped[int] = mapped_column(init=False, primary_key=True, index=True)
-    workout_id: Mapped[int] = mapped_column(nullable=False, index=True)
-    exercise_id: Mapped[int] = mapped_column(nullable=False, index=True)
+    workout_id: Mapped[int] = mapped_column(
+        ForeignKey('workouts.id', name='fk_workout_exercises_workout_id'),
+        nullable=False,
+        index=True,
+    )
+    exercise_id: Mapped[int] = mapped_column(
+        ForeignKey('exercises.id', name='fk_workout_exercises_exercise_id'),
+        nullable=False,
+        index=True,
+    )
     exercise_type: Mapped[str] = mapped_column(nullable=False)
     cardio_exercise_id: Mapped[int | None] = mapped_column(nullable=True)
     target_duration_minutes: Mapped[int | None] = mapped_column(nullable=True)
@@ -77,6 +92,8 @@ class Workout_Exercises:
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()
     )
+    workout = relationship('Workouts', back_populates='exercises')
+    exercise = relationship('Exercises', back_populates='workout_exercises')
 
 
 @table_registry.mapped_as_dataclass
@@ -90,6 +107,9 @@ class Equipment:
     muscle_group: Mapped[list] = mapped_column(
         JSON, default=None, nullable=True
     )
+    exercises = relationship(
+        'Exercises', secondary='exercise_equipment', back_populates='equipment'
+    )
 
 
 @table_registry.mapped_as_dataclass
@@ -97,7 +117,13 @@ class UserHIITLogs:
     __tablename__ = 'user_hiit_logs'
     id: Mapped[int] = mapped_column(init=False, primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(nullable=False)
-    workout_exercise_id: Mapped[int] = mapped_column(nullable=False)
+    workout_exercise_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            'workout_exercises.id',
+            name='fk_user_hiit_logs_workout_exercise_id',
+        ),
+        nullable=False,
+    )
     session_id: Mapped[int] = mapped_column(nullable=False)
     set_number: Mapped[int] = mapped_column(nullable=False)
     actual_time_per_rep_seconds: Mapped[float] = mapped_column(nullable=True)
@@ -105,6 +131,7 @@ class UserHIITLogs:
     completed_at: Mapped[datetime] = mapped_column(
         default=func.now(), nullable=False
     )
+    workout_exercise = relationship('Workout_Exercises')
 
 
 @table_registry.mapped_as_dataclass
@@ -123,7 +150,13 @@ class UserCardioLogs:
     __tablename__ = 'user_cardio_logs'
     id: Mapped[int] = mapped_column(init=False, primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(nullable=False)
-    cardio_exercise_id: Mapped[int] = mapped_column(nullable=False)
+    cardio_exercise_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            'cardio_exercises.id',
+            name='fk_user_cardio_logs_cardio_exercise_id',
+        ),
+        nullable=False,
+    )
     session_id: Mapped[int] = mapped_column(nullable=False)
     duration_minutes: Mapped[int] = mapped_column(nullable=True)
     distance_km: Mapped[float] = mapped_column(nullable=True)
@@ -133,3 +166,23 @@ class UserCardioLogs:
     incline_percent: Mapped[float] = mapped_column(nullable=True)
     resistance_level: Mapped[int] = mapped_column(nullable=True)
     notes: Mapped[str] = mapped_column(nullable=True)
+    cardio_exercise = relationship('CardioExercises')
+
+
+# Tabela associativa para o relacionamento muitos-para-muitos
+exercise_equipment = Table(
+    'exercise_equipment',
+    table_registry.metadata,
+    Column(
+        'exercise_id',
+        ForeignKey('exercises.id'),
+        primary_key=True,
+        type_=Integer,
+    ),
+    Column(
+        'equipment_id',
+        ForeignKey('equipment.id'),
+        primary_key=True,
+        type_=Integer,
+    ),
+)

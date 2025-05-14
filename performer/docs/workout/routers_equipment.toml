@@ -1,0 +1,118 @@
+[get_equipment]
+summary = "Get - Rota para listar todos os equipamentos cadastrados"
+description = """
+## Lista todos os equipamentos cadastrados no banco de dados.
+
+### Comportamento:
+- Retorna uma lista de equipamentos ordenados pelo ID.
+
+### Códigos de Resposta:
+- 200: Lista de equipamentos retornada com sucesso.
+- 500: Erro interno do servidor.
+"""
+resp_description = "Retorna uma lista com todos os equipamentos cadastrados no banco de dados."
+
+[get_equipment_by_id]
+summary = "Get - Rota para obter detalhes de um equipamento pelo ID"
+description = """
+## Obtém os detalhes de um equipamento específico pelo ID.
+
+### Parâmetros:
+- **`id`** (obrigatório): ID do equipamento a ser buscado.
+
+### Comportamento:
+- Retorna os detalhes do equipamento correspondente ao ID fornecido.
+
+### Códigos de Resposta:
+- 200: Detalhes do equipamento retornados com sucesso.
+- 404: Equipamento não encontrado.
+- 500: Erro interno do servidor.
+"""
+resp_description = "Retorna os detalhes do equipamento correspondente ao ID fornecido."
+
+[search_equipment_by_muscle_group]
+summary = "Get - Rota para buscar equipamentos por grupo muscular"
+description = """
+## Busca equipamentos associados a um ou mais grupos musculares.
+
+### Parâmetros de consulta:
+- **`muscle_group`** (obrigatório): Um ou mais grupos musculares para filtrar os equipamentos.
+
+### Comportamento:
+- Retorna uma lista de equipamentos que correspondem aos grupos musculares fornecidos.
+- Caso nenhum equipamento seja encontrado, retorna um erro 404.
+
+### Códigos de Resposta:
+- 200: Lista de equipamentos retornada com sucesso.
+- 404: Nenhum equipamento encontrado para os grupos musculares especificados.
+- 500: Erro interno do servidor.
+"""
+resp_description = "Retorna uma lista de equipamentos associados aos grupos musculares fornecidos."
+
+[create_equipment]
+summary = "Post - Rota para criar um novo equipamento"
+description = """
+## Cria um novo equipamento no banco de dados.
+
+### Parâmetros:
+- **`name`** (obrigatório): Nome do equipamento.
+- **`description`** (opcional): Descrição do equipamento.
+
+### Restrições:
+- O nome do equipamento deve ser único.
+
+### Comportamento:
+- Verifica se já existe um equipamento com o mesmo nome.
+- Adiciona o novo equipamento ao banco de dados.
+
+### Códigos de Resposta:
+- 201: Equipamento criado com sucesso.
+- 409: Nome do equipamento já existe.
+- 500: Erro interno do servidor.
+"""
+resp_description = "Retorna os detalhes do equipamento criado."
+
+[update_equipment]
+summary = "Patch - Rota para atualizar um equipamento existente"
+description = """
+## Atualiza os detalhes de um equipamento existente.
+
+### Parâmetros:
+- **`id`** (obrigatório): ID do equipamento a ser atualizado.
+- **`payload`** (obrigatório): Dados a serem atualizados no equipamento. Apenas os campos fornecidos serão alterados.
+
+### Restrições:
+- O equipamento deve existir no banco de dados.
+
+### Comportamento:
+- Verifica se o equipamento existe pelo ID fornecido.
+- Atualiza os campos fornecidos com novos valores.
+
+### Códigos de Resposta:
+- 200: Equipamento atualizado com sucesso.
+- 404: Equipamento não encontrado.
+- 500: Erro interno do servidor.
+"""
+resp_description = "Retorna os detalhes do equipamento atualizado."
+
+[delete_equipment]
+summary = "Delete - Rota para deletar um equipamento pelo ID"
+description = """
+## Deleta um equipamento específico pelo ID.
+
+### Parâmetros:
+- **`id`** (obrigatório): ID do equipamento a ser deletado.
+
+### Restrições:
+- O equipamento deve existir no banco de dados.
+
+### Comportamento:
+- Verifica se o equipamento existe pelo ID fornecido.
+- Remove o equipamento do banco de dados.
+
+### Códigos de Resposta:
+- 200: Equipamento deletado com sucesso.
+- 404: Equipamento não encontrado.
+- 500: Erro interno do servidor.
+"""
+resp_description = "Confirmação de que o equipamento foi deletado com sucesso."

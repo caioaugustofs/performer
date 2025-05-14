@@ -1,0 +1,146 @@
+[get_workouts]
+summary = "Get - Rota para listar todos os workouts cadastrados"
+description = """
+## Lista todos os workouts cadastrados no banco de dados.
+
+### Comportamento:
+- Retorna uma lista de workouts com paginação (skip e limit).
+
+### Parâmetros:
+- `skip` (opcional): Número de registros a pular.
+- `limit` (opcional): Número máximo de registros a retornar.
+
+### Códigos de Resposta:
+- 200: Lista de workouts retornada com sucesso.
+- 400: Parâmetros inválidos fornecidos.
+"""
+resp_description = "Retorna uma lista com todos os workouts cadastrados no banco de dados."
+
+[get_workout_by_id]
+summary = "Get - Rota para obter detalhes de um workout pelo ID"
+description = """
+## Obtém os detalhes de um workout específico pelo ID.
+
+### Comportamento:
+- Retorna os detalhes do workout correspondente ao ID fornecido.
+
+### Parâmetros:
+- `id` (obrigatório): ID do workout a ser buscado.
+
+### Códigos de Resposta:
+- 200: Detalhes do workout retornados com sucesso.
+- 404: Workout não encontrado.
+"""
+resp_description = "Retorna os detalhes do workout correspondente ao ID fornecido."
+
+[get_public_status]
+summary = "Get - Rota para listar workouts por status público"
+description = """
+## Lista workouts com base no status público (is_public).
+
+### Comportamento:
+- Retorna uma lista de workouts com base no status público fornecido.
+
+### Parâmetros:
+- `is_public` (obrigatório): Status público do workout (true ou false).
+
+### Códigos de Resposta:
+- 200: Lista de workouts retornada com sucesso.
+- 400: Parâmetros inválidos fornecidos.
+"""
+resp_description = "Retorna uma lista de workouts com base no status público fornecido."
+
+[get_by_Workouts]
+summary = "Get - Rota para listar workouts criados por um usuário"
+description = """
+## Lista workouts criados por um usuário específico.
+
+### Comportamento:
+- Retorna uma lista de workouts criados pelo usuário correspondente ao ID fornecido.
+
+### Parâmetros:
+- `user_id` (obrigatório): ID do usuário criador dos workouts.
+
+### Códigos de Resposta:
+- 200: Lista de workouts retornada com sucesso.
+- 404: Usuário não encontrado.
+"""
+resp_description = "Retorna uma lista de workouts criados pelo usuário correspondente ao ID fornecido."
+
+[get_workouts_by_user_and_public_status]
+summary = "Get - Rota para listar workouts por usuário e status público"
+description = """
+## Lista workouts criados por um usuário específico e com base no status público.
+
+### Comportamento:
+- Retorna uma lista de workouts com base no ID do usuário e no status público fornecidos.
+
+### Parâmetros:
+- `user_id` (obrigatório): ID do usuário criador dos workouts.
+- `is_public` (obrigatório): Status público do workout (true ou false).
+
+### Códigos de Resposta:
+- 200: Lista de workouts retornada com sucesso.
+- 404: Usuário ou workouts não encontrados.
+"""
+resp_description = "Retorna uma lista de workouts com base no ID do usuário e no status público fornecidos."
+
+[create_workout]
+summary = "Post - Rota para criar um novo workout"
+description = """
+## Cria um novo workout no banco de dados.
+
+### Comportamento:
+- Adiciona o novo workout ao banco de dados com os detalhes fornecidos.
+
+### Parâmetros:
+- `name` (obrigatório): Nome do workout.
+- `description` (opcional): Descrição do workout.
+- `is_public` (opcional): Status público do workout.
+
+### Códigos de Resposta:
+- 201: Workout criado com sucesso.
+- 400: Dados inválidos fornecidos.
+"""
+resp_description = "Retorna os detalhes do workout criado."
+
+[update_workout]
+summary = "Patch - Rota para atualizar um workout existente"
+description = """
+## Atualiza os detalhes de um workout existente.
+
+### Comportamento:
+- Verifica se o workout existe pelo ID e pelo ID do criador fornecidos.
+- Atualiza os campos fornecidos com novos valores.
+
+### Parâmetros:
+- `id` (obrigatório): ID do workout a ser atualizado.
+- `user_id` (obrigatório): ID do criador do workout.
+- `name` (opcional): Novo nome do workout.
+- `description` (opcional): Nova descrição do workout.
+- `is_public` (opcional): Novo status público do workout.
+
+### Códigos de Resposta:
+- 200: Workout atualizado com sucesso.
+- 404: Workout ou criador não encontrados.
+"""
+resp_description = "Retorna os detalhes do workout atualizado."
+
+[delete_workout]
+summary = "Delete - Rota para deletar um workout pelo ID"
+description = """
+## Deleta um workout específico pelo ID e pelo ID do criador.
+
+### Comportamento:
+- Verifica se o workout existe pelo ID e pelo ID do criador fornecidos.
+- Remove o workout do banco de dados.
+
+### Parâmetros:
+- `id` (obrigatório): ID do workout a ser deletado.
+- `user_id` (obrigatório): ID do criador do workout.
+
+### Códigos de Resposta:
+- 200: Workout deletado com sucesso.
+- 404: Workout ou criador não encontrados.
+"""
+resp_description = "Confirmação de que o workout foi deletado com sucesso."

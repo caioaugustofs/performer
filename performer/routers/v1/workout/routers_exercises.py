@@ -38,6 +38,13 @@ async def get_exercises(
 ):
     result = await session.execute(select(Exercises))
     exercises = result.scalars().all()
+    if not exercises:
+        logger.warning('No exercises found')
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='No exercises found',
+        )
+    logger.info('Exercises retrieved successfully')
     return {'exercises': exercises}
 
 
@@ -80,14 +87,11 @@ async def get_exercises_difficulty(difficulty: int, session: Session):
     ],
 )
 async def get_exercises_muscle_group(
-    session: Session,
-    muscle: List[str] = Query(..., alias='muscle_group')
+    session: Session, muscle: List[str] = Query(..., alias='muscle_group')
 ):
     result = await session.execute(
         select(Exercises).where(
-            and_(*[
-                Exercises.muscle_group.contains(mg) for mg in muscle
-            ])
+            and_(*[Exercises.muscle_group.contains(mg) for mg in muscle])
         )
     )
     exercises = result.scalars().all()
@@ -103,7 +107,6 @@ async def get_exercises_muscle_group(
     return exercises
 
 
-
 @router.get(
     '/by_equipment_needed/',
     response_model=ExercisePublicList,
@@ -116,7 +119,6 @@ async def get_exercises_muscle_group(
 )
 async def get_exercises_equipment_needed_and(
     session: Session, equipment: List[str] = Query(..., alias='equipment')
- 
 ):
     results = await session.execute(
         select(Exercises).where(

@@ -10,7 +10,6 @@ class ExerciseCreate(BaseModel):
     muscle_group: Optional[list[str]] = None
     equipment_needed: Optional[list[str]] = None
     tags: Optional[list[str]] = None
-    calories_burned_estimated: Optional[float] = None
     video_url: Optional[str] = None
     image_url: Optional[str] = None
 
@@ -22,7 +21,7 @@ class ExercisePublic(BaseModel):
     muscle_group: list[str] | None = None
     equipment_needed: list[str] | None = None
     tags: list[str] | None = None
-    calories_burned_estimated: Optional[float] = None
+
     video_url: Optional[str] = None
     image_url: Optional[str] = None
 
