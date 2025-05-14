@@ -71,7 +71,7 @@ async def get_exercises_difficulty(difficulty: int, session: Session):
 
 
 @router.get(
-    '/{muscle_group}',
+    '/muscle_group/',
     status_code=HTTPStatus.OK,
     summary=config['get_exercises_muscle_group']['summary'],
     description=config['get_exercises_muscle_group']['description'],
@@ -79,8 +79,28 @@ async def get_exercises_difficulty(difficulty: int, session: Session):
         'resp_description'
     ],
 )
-async def get_exercises_muscle_group():
-    return False
+async def get_exercises_muscle_group(
+    session: Session,
+    muscle: List[str] = Query(..., alias='muscle_group')
+):
+    result = await session.execute(
+        select(Exercises).where(
+            and_(*[
+                Exercises.muscle_group.contains(mg) for mg in muscle
+            ])
+        )
+    )
+    exercises = result.scalars().all()
+
+    if not exercises:
+        logger.warning(f'No exercises found with muscle group {muscle}')
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail=f'No exercises found with muscle group {muscle}',
+        )
+    logger.info(f'Exercises with muscle group {muscle}')
+
+    return exercises
 
 
 

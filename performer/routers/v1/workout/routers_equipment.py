@@ -1,12 +1,13 @@
 from http import HTTPStatus
-from typing import Annotated
+from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from performer.database import get_session
 from performer.model.models import Equipment
+from performer.model.workout_models import Exercises
 from performer.schemas.workout.schemas_equipment import (
     EquipmentCreate,
     EquipmentPublic,
@@ -58,11 +59,33 @@ async def get_equipment_by_id(equipment_id: int, session: Session):
 
 
 @router.get(
-    '/search/muscle_group',
+    '/search/muscle_group/',
     status_code=HTTPStatus.OK,
+    response_model=EquipmentPublicList,
 )
-async def search_equipment_by_muscle_group():
-    return False
+async def search_equipment_by_muscle_group(
+    session: Session,
+    muscle: List[str] = Query(..., alias='muscle_group')
+    ):
+
+    result = await session.execute(
+        select(Exercises).where(
+            and_(*[
+                Exercises.muscle_group.contains(mg) for mg in muscle
+            ])
+        )
+    )
+    
+    exercises = result.scalars().all()
+
+    if not exercises:
+        logger.warning(f'No equipment found with muscle group {muscle}')
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail=f'No equipment found with muscle group {muscle}',
+        )
+    logger.info(f'Equipment with muscle group {muscle} retrieved successfully')
+    return {'equipment': exercises}
 
 
 # ------------------------- POST -------------------------#

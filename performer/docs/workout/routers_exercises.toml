@@ -1,33 +1,57 @@
 [get_exercises]
-summary = "Get - Rota retorna todos os exercícios cadastrados"
+summary = "Get - Rota para listar todos os exercícios cadastrados"
 description = """
-## Retorna todos os exercícios cadastrados no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+## Lista todos os exercícios cadastrados no banco de dados.
+
+### Comportamento:
+- Retorna uma lista de exercícios ordenados pelo ID.
 """
 resp_description = "Retorna uma lista com todos os exercícios cadastrados no banco de dados."
 
 
 [get_exercises_difficulty]
-summary = "Get - Rota retorna todos os exercícios cadastrados filtrados por dificuldade"
-description ="""
-## Retorna todos os exercícios cadastrados no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+summary = "Get - Rota para listar exercícios filtrados por dificuldade"
+description = """
+## Lista exercícios cadastrados filtrados por dificuldade.
+
+### Parâmetros:
+- **`difficulty`**: Nível de dificuldade do exercício (inteiro).
+
+### Comportamento:
+- Retorna uma lista de exercícios que correspondem ao nível de dificuldade especificado.
+- Caso nenhum exercício seja encontrado, retorna um erro 404.
 """
 resp_description = "Retorna uma lista com todos os exercícios cadastrados no banco de dados filtrados por dificuldade."
 
 [get_exercises_muscle_group]
-summary = "Get - Rota retorna todos os exercícios cadastrados filtrados por grupo muscular"
+summary = "Get - Rota para listar exercícios por grupo muscular"
 description = """
-## Retorna todos os exercícios cadastrados no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+## Lista exercícios que trabalham grupos musculares específicos.
+
+### Parâmetros de consulta:
+- **`muscle_group`**: Um ou mais grupos musculares para filtrar os exercícios.
+
+#### Exemplos:
+- `?muscle_group=peito&muscle_group=perna`
+- `?muscle_group=peito,perna`
+
+### Comportamento:
+- Retorna uma lista de exercícios que correspondem aos grupos musculares especificados.
+- Caso nenhum exercício seja encontrado, retorna um erro 404.
 """
-resp_description = "Retorna uma lista com todos os exercícios cadastrados no banco de dados filtrados por grupo muscular."
+resp_description = "Retorna uma lista de exercícios que correspondem aos grupos musculares especificados."
 
 [get_exercises_equipment_needed]
-summary = "Get - Rota retorna todos os exercícios cadastrados filtrados por equipamento necessário"
+summary = "Get - Rota para listar exercícios filtrados por equipamento necessário"
 description = """
-## Retorna todos os exercícios cadastrados no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+## Lista exercícios cadastrados filtrados por equipamento necessário.
+
+### Parâmetros de consulta:
+- **`equipment`**: Lista de equipamentos necessários para filtrar os exercícios.
+
+### Comportamento:
+- Retorna uma lista de exercícios que utilizam os equipamentos especificados.
+- Caso nenhum exercício seja encontrado, retorna um erro 404.
 """
 resp_description = "Retorna uma lista com todos os exercícios cadastrados no banco de dados filtrados por equipamento necessário."
 
@@ -35,16 +59,34 @@ resp_description = "Retorna uma lista com todos os exercícios cadastrados no ba
 summary = "Post - Rota para criar um novo exercício"
 description = """
 ## Cria um novo exercício no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+
+### Parâmetros:
+- **`payload`**: Dados do exercício a ser criado, incluindo nome, dificuldade, grupos musculares, equipamentos necessários, entre outros.
+
+### Restrições:
+- O nome do exercício deve ser único.
+
+### Comportamento:
+- Caso o nome do exercício já exista, retorna um erro 409.
+- Caso contrário, cria o exercício e retorna os dados do exercício criado.
 """
 resp_description = "Retorna o exercício criado com sucesso."
-
 
 [update_exercise]
 summary = "Patch - Rota para atualizar um exercício existente"
 description = """
 ## Atualiza um exercício existente no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+
+### Parâmetros:
+- **`exercise_id`**: ID do exercício a ser atualizado.
+- **`payload`**: Dados a serem atualizados no exercício. Apenas os campos fornecidos serão alterados.
+
+### Restrições:
+- O exercício deve existir no banco de dados.
+
+### Comportamento:
+- Caso o exercício não seja encontrado, retorna um erro 404.
+- Caso o exercício seja encontrado, os campos fornecidos serão atualizados.
 """
 resp_description = "Retorna o exercício atualizado com sucesso."
 
@@ -52,14 +94,33 @@ resp_description = "Retorna o exercício atualizado com sucesso."
 summary = "Patch - Rota para atualizar as mídias de um exercício existente"
 description = """
 ## Atualiza as mídias de um exercício existente no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+
+### Parâmetros:
+- **`exercise_id`**: ID do exercício cujas mídias serão atualizadas.
+- **`payload`**: Dados das mídias a serem atualizadas. Apenas os campos fornecidos serão alterados.
+
+### Restrições:
+- O exercício deve existir no banco de dados.
+
+### Comportamento:
+- Caso o exercício não seja encontrado, retorna um erro 404.
+- Caso o exercício seja encontrado, as mídias fornecidas serão atualizadas.
 """
 resp_description = "Retorna o exercício atualizado com sucesso."
 
 [delete_exercise]
-summary = "Delete - Rota para deletar um exercício existente"
+summary = "Delete - Rota para remover um exercício existente"
 description = """
-## Deleta um exercício existente no banco de dados.
-Os exercícios são retornados em ordem dos id, com os seguintes campos:
+## Remove um exercício existente do banco de dados.
+
+### Parâmetros:
+- **`exercise_id`**: ID do exercício a ser removido.
+
+### Restrições:
+- O exercício deve existir no banco de dados.
+
+### Comportamento:
+- Caso o exercício não seja encontrado, retorna um erro 404.
+- Caso o exercício seja encontrado, ele será removido permanentemente.
 """
-resp_description = "Remove o exercício com sucesso não retornando nada."
+resp_description = "Exclui o exercício com sucesso e não retorna nenhum conteúdo."
