@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -31,7 +31,7 @@ class ExercisePublic(BaseModel):
 
 
 class ExercisePublicList(BaseModel):
-    exercises: list[ExercisePublic]
+    exercises: List[ExercisePublic]
 
 
 class ExerciseUpdate(BaseModel):

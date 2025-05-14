@@ -57,6 +57,14 @@ async def get_equipment_by_id(equipment_id: int, session: Session):
     return equipment
 
 
+@router.get(
+    '/search/muscle_group',
+    status_code=HTTPStatus.OK,
+)
+async def search_equipment_by_muscle_group():
+    return False
+
+
 # ------------------------- POST -------------------------#
 
 
@@ -84,29 +92,6 @@ async def create_equipment(equipment: EquipmentCreate, session: Session):
 
 
 # busta em uma lista do grupo muscular
-@router.get(
-    '/{muscle_group}',
-    status_code=HTTPStatus.OK,
-)
-async def get_equipment_by_muscle_group(muscle_group: str, session: Session):
-    # pesquisa uma string em uma lista no banco de dados
-    result = await session.execute(
-        select(Equipment).where(Equipment.muscle_group.contains(muscle_group))
-    )
-    equipment = result.scalars().all()
-
-    if not equipment:
-        logger.info(f'No equipment found for muscle group {muscle_group}')
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail=f'No equipment found for muscle group {muscle_group}',
-        )
-    logger.info(
-        f'Equipment for muscle group \
-                {muscle_group} retrieved successfully'
-    )
-
-    return equipment
 
 
 # ------------------------- PATCH -------------------------#
